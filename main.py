@@ -21,7 +21,8 @@ def start_bot(message):
 def get_weather(message):
     city = message.text.lower()
     try:
-        data_json = requests.get(f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API}&units=metric&lang=ru")
+        data_json = requests.get(
+            f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API}&units=metric&lang=ru")
         data = json.loads(data_json.text)
 
         bot.reply_to(message, f"Температура: {int(data['main']['temp'])}°С\n"
@@ -29,7 +30,10 @@ def get_weather(message):
                               f"Влажность: {data['main']['humidity']}%\n"
                               f"Описание: {data['weather'][0]['description']}")
     except Exception as e:
-        bot.reply_to(message, f'Ошибка: {str(e)}. Пожалуйста, повторите позже.')
+        bot.reply_to(message, f'Ошибка.\nПожалуйста, повторите позже.')
+        # В ходе тестирования выяснилось, что периодически возникает ошибка:
+        # (Превышено время ожидания ответа от сайта api.openweathermap.org.).
+        # Для этого используется обработка исключений.
 
 
 bot.infinity_polling()
